@@ -48,9 +48,9 @@ class Pool:
         self.sell = -1
 
         # if pool not exist in collection
-        pool = self.interface.get_pool(self.swap, self.fee, self.version, self.t1.address)
+        pool = interface.get_pool(self.swap, self.fee, self.version, self.t1.address)
         if pool is None:
-            self.interface.add_pool({
+            interface.add_pool({
                 "swap": self.swap,
                 "fee": self.fee,
                 "version": self.version,
@@ -123,7 +123,7 @@ class Pool:
             setattr(self, side, price)
 
             # update price in db
-            self.interface.update_price(self.swap, self.fee, 
+            interface.update_price(self.swap, self.fee, 
                                         self.version, self.t1.address, 
                                         side, price) 
             
