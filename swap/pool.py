@@ -1,4 +1,3 @@
-# Author: @mertcandav
 from uniswap import Uniswap
 from random import choice
 
@@ -7,7 +6,7 @@ from requests.exceptions import ConnectionError as TooManyRequests # thread limi
 from web3.exceptions import ContractLogicError
 
 # local imports
-from api.interface import Interface
+from api import interface
 from helpers import thread, set_timeout
 from tokens.token import Token
 from swap.forks import Forks
@@ -15,7 +14,7 @@ from swap.forks import Forks
 
 
 class Pool:
-    interface = Interface()
+    
 
     exchanges = {
         'sushiswap': {
@@ -29,7 +28,7 @@ class Pool:
 
     @classmethod
     def start_all(cls, swap, version, fee):
-        tokens = cls.interface.get_token()
+        tokens = interface.get_token()
         for token in tokens:
             t1 = Token(**token)
             if t1.track:
