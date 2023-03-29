@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Files containing credentials or sensitive information
+config.json
+secrets.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+**.ipynb
