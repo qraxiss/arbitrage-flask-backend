@@ -11,11 +11,9 @@ from helpers import thread, set_timeout
 from tokens.token import Token
 from swap.forks import Forks
 
-
+from time import sleep
 
 class Pool:
-    
-
     exchanges = {
         'sushiswap': {
             2: Forks.create_swaps('sushiswap', 2)
@@ -27,18 +25,37 @@ class Pool:
     }
 
     @classmethod
+    def db(cls):
+        cls.tokens : dict = {
+            token['address']: token for token in interface.get_token()
+        }
+        cls.pools : dict = {
+            f"{pool['t1']}{pool['swap']}{pool['fee']}{pool['version']}": pool for pool in interface.get_pool()
+        }
+        set_timeout(cls.db, 12)
+
+    @property
+    def token(self):
+        return self.tokens[self.t1.address]
+    @property
+    def pool(self):
+        return self.pools[f"{self.t1.address}{self.swap}{self.fee}{self.version}"] 
+    @classmethod
     def start_all(cls, swap, version, fee):
+        cls.db()
+        sleep(1)
+        
         tokens = interface.get_token()
         for token in tokens:
             t1 = Token(**token)
-            if t1.track:
-                token = [token for token in tokens if token['symbol'] == t1.pair][0]
-                t0 = Token(**token)
-                pool = cls(swap, version, fee, t0=t0, t1=t1)
-                pool.start()
+            token = [token for token in tokens if token['symbol'] == t1.pair][0]
+            t0 = Token(**token)
+            pool = cls(swap, version, fee, t0=t0, t1=t1)
+            pool.start()
     
 
     def __init__(self, swap: str, version: int, fee: int, t0: Token, t1: Token) -> None:
+        
         self.swap = swap
         self.version = version
         self.fee = fee
@@ -48,6 +65,7 @@ class Pool:
         self.sell = -1
 
         # if pool not exist in collection
+
         pool = interface.get_pool(self.swap, self.fee, self.version, self.t1.address)
         if pool is None:
             interface.add_pool({
@@ -57,7 +75,8 @@ class Pool:
                 "t0": self.t0.address,
                 "t1": self.t1.address,
                 "buy": self.buy,
-                "sell": self.sell
+                "sell": self.sell,
+                "volume": True,
             })
     
     @property
@@ -65,7 +84,7 @@ class Pool:
         return choice(self.exchanges[self.swap][self.version])
 
     def get_price(self, side) -> float:
-        address = [self.t0.checksum_adrress, self.t1.checksum_adrress]
+        address = [self.t0.checksum_address, self.t1.checksum_address]
         address = address if side == 'buy' else address[::-1]
 
         # version 3 not support route        
@@ -88,16 +107,22 @@ class Pool:
         # And recursion depth is not a problem because the new
         # function is not called before the function is closed.
 
+
+
+        if not self.token['track'] or not self.pool['volume']:
+            set_timeout(lambda: self.track(side), 300) # 5 minutes
+            return
+
         try:
             price = self.get_price(side)
-            set_timeout(lambda: self.track(side), 12)
             self.update(price, side)
+            set_timeout(lambda: self.track(side), 12)
 
         except ContractLogicError as e:
             self.error_log(e, side)
             self.update(-1, side)
-            # 10 minutes + random 0-5 minutes
-            # set_timeout(lambda: self.track(side), 10 * 60 + choice(range(300))) 
+            interface.close_pool(self.swap, self.fee, self.version, self.t1.address)
+            set_timeout(lambda: self.track(side), 10 * 60 + choice(range(300)))
 
         except TooManyRequests as e:
             self.error_log(e, side)
@@ -107,9 +132,8 @@ class Pool:
             set_timeout(lambda: self.track(side), sleep_sec) 
         
         except Exception as e:
-            # print(f'{self.version} {self.swap}, {self.fee}, {self.t1.symbol_pair}, {(e)}')
             self.error_log(e, side)
-            set_timeout(lambda: self.track(side), 60)
+            set_timeout(lambda: self.track(side), 12)
 
     def update(self, price: float, side) -> None:
         def is_update() -> bool:

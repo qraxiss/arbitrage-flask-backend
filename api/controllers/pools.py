@@ -13,7 +13,7 @@ def get(swap=None, fee=None, version=None, t1=None, *args, **kwargs):
 def update(swap, fee, version, t1, side, price, *args, **kwargs):
     return collection.update_one({'swap': swap, 'fee': fee,
                                   'version': version, 't1': t1},
-                                 {"$set": {f'{side}': price}})
+                                 {"$set": {side : price}})
 
 
 def insert(*args, **kwargs):

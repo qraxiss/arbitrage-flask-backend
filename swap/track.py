@@ -6,7 +6,6 @@ if __name__ == '__main__':
     path = os.getcwd()
     sys.path.append(path)
 
-
     from swap.pool import Pool
     script_name = sys.argv[0]
 

@@ -1,3 +1,6 @@
-from api.controllers.best_prices import get
+from api import interface
 
-print(get())
+for token in interface.get_token():
+    interface.open(token['address'])
+
+    

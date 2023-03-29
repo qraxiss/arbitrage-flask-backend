@@ -18,6 +18,9 @@ pool = {
         "t1": {
             "type": "string"
         },
+        "volume": {
+            "type": "boolean"
+        },
         "buy": {
             "type": "number"
         },
@@ -25,7 +28,7 @@ pool = {
             "type": "number"
         }
     },
-    "required": ["buy", "sell", "swap", "version", "fee"],
+    "required": ["buy", "sell", "swap", "version", "fee", "t0", "t1", "volume"],
 }
 
 pools = Schema(coll_name='pools',
