@@ -7,7 +7,7 @@ client = Client()
 
 pairs = {
     token['symbol'] + token['pair']: token['address']
-    for token in tokens.get()
+    for token in tokens.get() if token['pair'] is not None
 }
 
 def get_prices():

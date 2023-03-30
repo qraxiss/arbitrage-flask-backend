@@ -4,7 +4,8 @@ from itertools import permutations
 
 def find_profitable_trade(prices: dict, address:str)-> dict:
     trades = []
-    for (buy_exchange, buy_prices),(sell_exchange, sell_prices) in permutations(prices.items(), 2):
+    perms = permutations(prices.items(), 2) # get all possible combinations of buy and sell
+    for (buy_exchange, buy_prices),(sell_exchange, sell_prices) in perms:
         buy = buy_prices['buy']
         sell = sell_prices['sell']
 
@@ -14,13 +15,13 @@ def find_profitable_trade(prices: dict, address:str)-> dict:
             case _ ,(0 | None):
                 continue
 
-        profit = ((buy * sell) -1) * 100
+        profit = ((buy * sell) -1) * 100 # calculate profit percentage
 
         trades.append({
-            'buy_exchange': buy_exchange,
-            'sell_exchange': sell_exchange,
-            'buy_price': buy,
-            'sell_price': 1/sell,
+            'buy': buy_exchange,
+            'sell': sell_exchange,
+            'buy_qty': buy,
+            'sell_price_per_qty': sell, # 
             'profit_percentage': profit,
             'address': address
         })

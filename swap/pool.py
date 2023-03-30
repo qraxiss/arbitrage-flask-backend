@@ -47,6 +47,9 @@ class Pool:
         
         tokens = interface.get_token()
         for token in tokens:
+            if token['pair'] is None:
+                continue
+
             t1 = Token(**token)
             token = [token for token in tokens if token['symbol'] == t1.pair][0]
             t0 = Token(**token)

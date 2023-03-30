@@ -1,12 +1,11 @@
 from api.database.schemas.schema import Schema
+from json import load
 
 tokens = Schema(coll_name='tokens',
                 properties={
                     "type": "object",
                     "properties": {
-                        "pair": {
-                            "type": "string",
-                        },
+                        "pair": {},
                         "address": {
                             "type": "string",
                         },
@@ -26,5 +25,5 @@ tokens = Schema(coll_name='tokens',
                     },
                     "required": ["pair", "address", "decimals", "symbol", "name", "track"],
                     "additionalProperties": True
-                }
-                )
+                },
+                inserts=load(open('tokens.json', 'r')))
