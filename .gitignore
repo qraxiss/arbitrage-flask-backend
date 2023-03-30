@@ -9,10 +9,6 @@ venv/
 .vscode/
 .idea/
 
-# Files containing credentials or sensitive information
-config.json
-secrets.txt
-
 # Jupyter Notebook
 .ipynb_checkpoints/
 **.ipynb
