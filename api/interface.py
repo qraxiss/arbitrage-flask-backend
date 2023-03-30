@@ -88,3 +88,7 @@ def open_all_pools():
 def close_all_pools():
     for pool in get_pool():
         close_pool(**pool)
+
+
+def get_binance_prices():
+    return get(f'{URL}/binance').json()

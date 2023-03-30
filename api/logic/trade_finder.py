@@ -26,8 +26,8 @@ def find_profitable_trade(prices: dict)-> dict:
     return trades
 
 def get():
-    prices =  interface.get_best_prices()
+    swaps =  interface.get_best_prices()
     return {
         addr: find_profitable_trade(data)
-        for addr, data in prices.items()
+        for addr, data in swaps.items()
     }

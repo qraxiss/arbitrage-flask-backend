@@ -30,4 +30,12 @@ def get():
     for address, swap in df.columns:
         prices[address][swap] = {**df[address][swap]}
 
-    return dict(prices)
+    binance = interface.get_binance_prices()
+    prices = dict(prices)
+    for address, price in binance.items():
+        try:
+            prices[address]['binance'] = price
+        except KeyError:
+            continue
+
+    return prices
