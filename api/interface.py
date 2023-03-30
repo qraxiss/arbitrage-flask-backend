@@ -92,3 +92,7 @@ def close_all_pools():
 
 def get_binance_prices():
     return get(f'{URL}/binance').json()
+
+
+def get_trades():
+    return get(f'{URL}/trades').json()
