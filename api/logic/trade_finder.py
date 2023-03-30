@@ -2,7 +2,7 @@ from api import interface
 
 from itertools import permutations
 
-def find_profitable_trade(prices: dict)-> dict:
+def find_profitable_trade(prices: dict, address:str)-> dict:
     trades = []
     for (buy_exchange, buy_prices),(sell_exchange, sell_prices) in permutations(prices.items(), 2):
         buy = buy_prices['buy']
@@ -22,12 +22,14 @@ def find_profitable_trade(prices: dict)-> dict:
             'buy_price': buy,
             'sell_price': 1/sell,
             'profit_percentage': profit,
+            'address': address
         })
     return trades
 
 def get():
     swaps =  interface.get_best_prices()
-    return {
-        addr: find_profitable_trade(data)
-        for addr, data in swaps.items()
-    }
+    return [
+        trade
+            for addr, data in swaps.items()
+                for trade in find_profitable_trade(data, addr)
+    ]
