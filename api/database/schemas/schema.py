@@ -12,6 +12,7 @@ class Schema:
             }
         )
 
-        coll.insert_many(inserts)
+        if inserts is not None:
+            coll.insert_many(inserts)
 
         return coll
