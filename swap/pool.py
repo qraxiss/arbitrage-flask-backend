@@ -40,6 +40,8 @@ class Pool:
     @property
     def pool(self):
         return self.pools[f"{self.t1.address}{self.swap}{self.fee}{self.version}"] 
+    
+
     @classmethod
     def start_all(cls, swap, version, fee):
         cls.db()
@@ -81,6 +83,14 @@ class Pool:
                 "sell": self.sell,
                 "volume": True,
             })
+
+        # get current pools every pool object create
+        self.tokens : dict = {
+            token['address']: token for token in interface.get_token()
+        }
+        self.pools : dict = {
+            f"{pool['t1']}{pool['swap']}{pool['fee']}{pool['version']}": pool for pool in interface.get_pool()
+        }
     
     @property
     def fork(self) -> Uniswap:
