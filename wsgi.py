@@ -6,7 +6,7 @@ from config import HOST, PORT
 swaps = {
     'uniswap': {
         2 : [3000],
-        3 : [3000, 10000],
+        3 : [100, 3000, 10000],
     },
     'sushiswap': {
         2 : [3000],
