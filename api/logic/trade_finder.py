@@ -31,6 +31,7 @@ def get():
     
     prices = interface.get_best_prices() 
     binance = interface.get_binance_prices()
+    tokens = {token['address']: token['track']  for token in interface.get_token()}
     prices = dict(prices)
     for address, price in binance.items():
         try:
@@ -42,5 +43,6 @@ def get():
     return [
         trade
             for addr, data in prices.items()
-                for trade in find_profitable_trade(data, addr)
+                if tokens[addr]
+                    for trade in find_profitable_trade(data, addr)
     ]

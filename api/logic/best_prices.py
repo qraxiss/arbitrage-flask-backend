@@ -11,10 +11,14 @@ import numpy as np
 
 def get():
     pools = interface.get_pool()
+    tokens = {
+        token['address']: token 
+              for token in interface.get_token()
+        }
 
     df = pd.DataFrame([pool for pool in pools 
-                        if pool['buy'] != -1 or 
-                           pool['sell'] != -1]
+                        if pool['volume'] and (pool['buy'] != -1 or 
+                           pool['sell'] != -1)]
                         )
 
     df[df[['buy','sell']] < 0] = float('NaN')
@@ -28,6 +32,9 @@ def get():
     
     prices = defaultdict(dict)
     for address, swap in df.columns:
+        if not tokens[address]['track']:
+            continue
+
         prices[address][swap] = {**df[address][swap]}
 
     return prices
