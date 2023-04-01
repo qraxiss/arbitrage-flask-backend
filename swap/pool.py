@@ -121,7 +121,6 @@ class Pool:
         # function is not called before the function is closed.
 
 
-
         if not self.token['track'] or not self.pool['volume']:
             set_timeout(lambda: self.track(side), 300) # 5 minutes
             return

@@ -15,17 +15,16 @@ swaps = {
 
 
 def start(*args):
-    print(*args)
     return subprocess.Popen(['python3.10', 'swap/track.py', *args])
 
 if __name__ == '__main__':
-    # processing = [ 
-    # start(swap, str(fee), str(version))
-    #     for swap, version in swaps.items()
-    #         for version, fees in version.items()
-    #             for fee in fees
-    # ]            
+    processing = [ 
+    (start(swap, str(fee), str(version)), print(swap, fee, version, 'loop'))
+        for swap, version in swaps.items()
+            for version, fees in version.items()
+                for fee in fees
+    ]            
 
-    app.run(HOST, PORT)
+    app.run(HOST, PORT, debug=False)
 
 

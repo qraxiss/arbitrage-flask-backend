@@ -1,6 +1,5 @@
-from api import interface
+from swap.binance_ import Binance
 
-for token in interface.get_token():
-    interface.open(token['address'])
+from pprint import pprint
 
-    
+pprint(Binance().get_prices())
