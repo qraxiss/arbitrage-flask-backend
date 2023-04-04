@@ -13,4 +13,6 @@ venv/
 .ipynb_checkpoints/
 **.ipynb
 
+# secret files
 config.json
+.env
