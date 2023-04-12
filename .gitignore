@@ -9,9 +9,11 @@ venv/
 .vscode/
 .idea/
 
-# Jupyter Notebook
+# Test
 .ipynb_checkpoints/
 **.ipynb
+test.py
+
 
 # secret files
 config.json
